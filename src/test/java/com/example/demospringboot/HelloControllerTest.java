@@ -44,9 +44,9 @@ public class HelloControllerTest {
     }
 
     @Test
-    public void shutdownActuatorSpringBootModuleShouldNotBeActivated() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.get("/actuator/shutdown").accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNotFound())
-                .andExpect(content().string(emptyString()));
+    public void shutdownActuatorSpringBootModuleShouldBeActivated() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.post("/actuator/shutdown").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().json("{'message':'Shutting down, bye...'}"));
     }
 }
