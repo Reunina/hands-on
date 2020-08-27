@@ -49,4 +49,16 @@ public class HelloControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().json("{'message':'Shutting down, bye...'}"));
     }
+
+
+    @Test
+    public void shouldSayHelloToCustomName() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.get("/hello").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().string(equalTo("Hello World!")));
+        mvc.perform(MockMvcRequestBuilders.get("/hello?name=CustomName").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().string(equalTo("Hello CustomName!")));
+    }
+
 }
