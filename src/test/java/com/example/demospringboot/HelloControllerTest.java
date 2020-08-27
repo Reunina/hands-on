@@ -26,11 +26,27 @@ public class HelloControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string(equalTo("Greetings from Spring Boot!")));
     }
+
     @Test
     public void getHelloFromCustomPath() throws Exception {
         mvc.perform(MockMvcRequestBuilders.get("/customPath").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Greetings from Spring Boot!")))
                 .andExpect(content().string(containsString("customPath")));
+    }
+
+    @Test
+    public void useActuatorSpringBootModule() throws Exception {
+        String expectedOutput="{'_links':{'self':{'href':'http://localhost/actuator','templated':false},'health-path':{'href':'http://localhost/actuator/health/{*path}','templated':true},'health':{'href':'http://localhost/actuator/health','templated':false},'info':{'href':'http://localhost/actuator/info','templated':false}}}";
+        mvc.perform(MockMvcRequestBuilders.get("/actuator").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().json(expectedOutput));
+    }
+
+    @Test
+    public void shutdownActuatorSpringBootModuleShouldNotBeActivated() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.get("/actuator/shutdown").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andExpect(content().string(emptyString()));
     }
 }
